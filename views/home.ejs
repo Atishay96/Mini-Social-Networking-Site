@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 	<title>Friends</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script>
+    	$(document).ready(function(){
+    		var documents;
+ 			var length_doc;
+            var sess_id;
+    		$.ajax({
+    			url:'getuserdata',
+                contentType: 'application/json; charset=UTF-8',
+    			method:'POST',
+    			success: function(data){
+    				documents = data;
+    				length_doc = data.length;
+    			    $.ajax({
+                        url: '/get_sess_id',
+                        method:'POST',
+                        success: function(data){
+                            sess_id = data;
+                            $.ajax({
+                                url: '/getallcomments',
+                                contentType: 'application/json; charset=UTF-8',
+                                method: 'POST',
+                                success: function(data){
+                                    var length = data.length;
+                                    var num,num1,Img1,User1,Img2,User2;
+                                    for(var i=length-1;i>=0;i--)
+                                    {    
+                                        for(var k=length_doc-1;k>=0;k--)
+                                        {
+                                            if(documents[k]._id == data[i].User1)
+                                            {                                               
+                                                Img1 = documents[k].Path;
+                                                User1 = documents[k].Name;
+                                                if(sess_id==documents[k].Email)
+                                                {
+                                                    num = "./account";
+                                                }
+                                                else
+                                                {
+                                                    num = "openprofile/" + k;
+                                                }
+                                            }
+                                            if(documents[k]._id == data[i].User2)
+                                            {
+                                                Img2 = documents[k].Path;
+                                                User2 = documents[k].Name;
+                                                 if(sess_id==documents[k].Email)
+                                                {
+                                                    num1 = "./account";
+                                                }
+                                                else
+                                                {
+                                                    num1 = "openprofile/" + k;
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        if(data[i].Type=='1')
+                                        {   
+                                            $("#all_comments").append("<div class=\"timeline-entry-inner\"><div class=\"timeline-icon bg-success\"><i class=\"entypo-feather\"></i></div><div class=\"timeline-label\"><div id=\"all_comments\"></div><h2><img src=\"./dp/default.jpg\" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\"#\">Anonymous</a>&nbsp;&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<img src=\" "+Img2+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+num1+"\">"+User2+"</a></h2><br/><p><div class=\"pad\"><span class=\"change_color\">Confession:</span>&nbsp;<span class=\"entered_comment\">"+data[i].Data+"</span><br/><br/></div></p></div></div>");
+                                        }
+                                        else
+                                        {
+                                             $("#all_comments").append("<div class=\"timeline-entry-inner\"><div class=\"timeline-icon bg-success\"><i class=\"entypo-feather\"></i></div><div class=\"timeline-label\"><div id=\"all_comments\"></div><h2>&nbsp;<img src=\" "+Img1+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+ num +"\">"+ User1 +"</a>&nbsp;&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<img src=\" "+Img2+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+ num1 +"\">"+User2+"</a></h2><br/><p><div class=\"pad\"><span class=\"change_color\">Comment:</span>&nbsp;<span class=\"entered_comment\">"+data[i].Data+"</span><br/><br/></div></p></div></div>");
+                                        }
+                                    }
+                                    
+                                }
+                            });
+                        }
+                    });
+                }
+    		});
+    	});
+    </script>
+    <style>
+        .entered_comment
+        {
+
+            background-color: #ECF0F1;
+            font-size:20px;
+            padding:10px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #F39C12;
+        }
+        h2
+        {
+            font-weight: bold;
+        }
+        .pad
+        {
+            margin-top:15px;
+        }
+        .change_color
+        {
+            font-weight: bold;
+        }
+        body{
+            font-size:17px;
+            background: #3a57af;
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".navbar" data-offset="50" >
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid"> 
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://atishayj.in">Hola!</a>
+			</div>
+			<div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="./home">Home</a></li>
+						<li><a href="./account">Account</a></li>
+						<li><a id="logout" href="/logout">Log out</a></li>
+					</ul>
+			</div>
+		</div>
+	</nav>
+	<br/><br/><br/><br/>
+
+
+    <div class="container">
+        <div class="row">
+
+            <div class="timeline-centered">
+
+            <article class="timeline-entry">
+
+                <div id="all_comments"></div>
+                <br/>
+                <div class="timeline-entry-inner">
+                    <div class="timeline-icon bg-info">
+                    </div>
+                </div>
+            </article>
+
+            </div>	
+        </div>
+    </div>
+
+  </body>
+</html>

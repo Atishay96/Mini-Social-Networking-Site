@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 	<title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/stylee.css'/>
+    <script>
+
+    	$(document).ready(function(){
+            var documents;
+            var length_doc;
+    		var sess;
+    		$.ajax({
+    			url:'get_sess_id',
+    			method: 'POST',
+    			success:function(sess_id){
+    				sess = sess_id;
+    			}
+    		});
+
+    		$.ajax({
+    			url: '/getusers',
+                contentType: 'application/json; charset=UTF-8',
+    			method: 'POST',
+    			success: function(data){
+    				var len = data.length;
+    				if(len==1)
+    				{
+    					$(".users").text("No Friends to display");
+    				}
+    				for(var i=0;i<len;i++)
+    				{
+    					if(data[i].Email != sess)
+    					{
+    						$(".users").append("<li class=\"list-group-item text-right\"><div class=\"padding\"><span class=\"pull-left\"><img src=\" "+data[i].Path+" \" style=\"width:40px;height:40px;border-radius:200px;\">&nbsp;<a href=\" openprofile/"+ i +"\">"+ data[i].Name +"</a></span></div><br/></li>");
+    					}
+    				}
+    			}
+    		});
+            $.ajax({
+                url:'getuserdata',
+                contentType: 'application/json; charset=UTF-8',
+                method:'POST',
+                success: function(data){
+                    documents = data;
+                    length_doc = data.length;
+
+                    $.ajax({
+                        url:'/getusercomment',
+                        method:'POST',
+                        success: function(data){
+                                    console.log(data);
+                                    var length = data.length;
+                                    var num,User1,Img1,num1,Img2,User2;
+                                    console.log(documents);
+                                    console.log(data);
+                                    var i,k;
+                                    for(i=length-1;i>=0;i--)
+                                    {          
+                                        for(k=0;k<length_doc;k++)
+                                        {
+                                            if(documents[k]._id == data[i].User1)
+                                            {
+                                                 Img1 = documents[k].Path;
+                                                 User1 = documents[k].Name;
+                                                if(sess==documents[k].Email)
+                                                {
+                                                    num = "./account";
+                                                }
+                                                else
+                                                {
+                                                    num = "openprofile/" + k;
+                                                }
+                                            }
+                                            if(documents[k]._id == data[i].User2)
+                                            {
+                                                 Img2 = documents[k].Path;
+                                                 User2 = documents[k].Name;
+                                                 if(sess==documents[k].Email)
+                                                {
+                                                    num1 = "./account";
+                                                }
+                                                else
+                                                {
+                                                    num1 = "openprofile/" + k;
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        if(data[i].Type=='1')
+                                        {   
+                                            $(".comments").append("<div class=\"timeline-entry-inner\"><div class=\"timeline-icon bg-success\"><i class=\"entypo-feather\"></i></div><div class=\"timeline-label\"><div id=\"all_comments\"></div><h2><img src=\"./dp/default.jpg\" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\"#\">Anonymous</a>&nbsp;&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<img src=\" "+Img2+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+num1+"\">"+User2+"</a></h2><br/><p><div class=\"pad\"><span class=\"change_color\">Confession:</span>&nbsp;<span class=\"entered_comment\">"+data[i].Data+"</span><br/><br/></div></p></div></div>");
+                                        }
+                                        else
+                                        {
+                                             $(".comments").append("<div class=\"timeline-entry-inner\"><div class=\"timeline-icon bg-success\"><i class=\"entypo-feather\"></i></div><div class=\"timeline-label\"><div id=\"all_comments\"></div><h2>&nbsp;<img src=\" "+Img1+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+ num +"\">"+ User1 +"</a>&nbsp;&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<img src=\" "+Img2+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+ num1 +"\">"+User2+"</a></h2><br/><p><div class=\"pad\"><span class=\"change_color\">Comment:</span>&nbsp;<span class=\"entered_comment\">"+data[i].Data+"</span><br/><br/></div></p></div></div>");
+                                        }
+                                    };
+                            }
+                    });
+
+                }
+            });
+    		$.ajax({
+    			url: '/acc',
+                contentType: 'application/json; charset=UTF-8',
+    			method: 'POST',
+    			success: function(data){
+    				$("#dp").attr("src",data[0].Path);
+    				$(".name").text(data[0].Name); 
+    				$("#email").text(data[0].Email);
+    				$("#addr").text(data[0].Address);
+                    if(data[0].Website!=null)
+                    {
+                        Website_text_old = data[0].Website;
+                        $("#Website_name").text(data[0].Website);
+                        $("#website").attr("href","http://www."+data[0].Website);
+                    }
+                    if(data[0].Bio!=null)
+                    {
+                        Bio_text_old = data[0].Bio;
+                        $("#Bio_name").text(data[0].Bio);
+                    }
+    			}
+    		});
+            var Website_text_old;
+            var Bio_text_old;
+            
+ 	  //   	$("#comment").click(function(){
+				// var data = $("#textarea").val();
+				// console.log(data);
+				// $.ajax({
+				// 	url: '/comment',
+				// 	data: {'data': value},
+				// 	method: 'POST',
+				// 	success: function(data){
+
+				// 	}
+				// });    		
+ 	  //   	});
+              $("#save_website").hide();
+              $("#save_bio").hide();
+              $("#cancel_website").hide();
+              $("#cancel_bio").hide();
+              var website_text;
+              var bio_text;
+              $("#file").change(function(){
+                $("#target").submit();
+              });
+              $("#edit_website").click(function(){
+                $("#cancel_website").show();
+                $("#website").empty();
+                $("#save_website").show();
+                $("#edit_website").hide();
+                $("#website").removeAttr("href");
+                $("#edit_website").hide();
+                $("#website").append("<textarea class=\"website_text\" cols=\"22\" rows=\"2\" style=\"resize:none;\"></textarea >");
+              });
+              $("#save_website").click(function(){
+                    website_text = $(".website_text").val();
+                    $.ajax({
+                        url:'/update_website',
+                        data:{"value": website_text},
+                        method: 'POST',
+                    });               
+                    $("#website").empty();
+                    $("#save_website").hide();
+                    $("#cancel_website").hide();
+                    $("#edit_website").show();
+                    $("#website").append(website_text);
+                    $("#website").attr("href","http://www." + website_text);
+                });
+              $("#edit_bio").click(function(){
+                $("#bio").empty();
+                $("#cancel_bio").show();
+                $("#edit_bio").hide();
+                $("#save_bio").show();
+                $("#bio").append("<textarea class=\"bio_text\" cols=\"86\" rows=\"4\" style=\"resize:none;\"></textarea >");
+              });            
+              $("#save_bio").click(function(){
+                    bio_text = $(".bio_text").val();
+                    $.ajax({
+                        url:'/update_bio',
+                        data: {'value': bio_text},
+                        method: 'POST',
+                    });
+                    $("#cancel_bio").hide();
+                    $("#bio").empty();
+                    $("#save_bio").hide();
+                    $("#edit_bio").show();
+                    $("#bio").append(bio_text);
+                });
+                 $("#cancel_bio").click(function(){
+                    $("#bio").empty();
+                    $("#bio").append(Bio_text_old);
+                    $("#cancel_bio").hide();
+                    $("#save_bio").hide();
+                    $("#edit_bio").show();
+
+                });
+                 $("#cancel_website").click(function(){
+                    $("#website").empty();
+                    $("#website").append(Website_text_old);
+                    $("#cancel_website").hide();
+                    $("#save_website").hide();
+                    $("#edit_website").show();
+
+                });
+     	});  
+    
+    </script>
+    <style>
+        .entered_comment
+        {
+
+            background-color: #ECF0F1;
+            font-size:20px;
+            padding:10px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #F39C12;
+        }
+        .change_color
+        {
+            font-weight: bold;
+        }
+      .navbar {
+              padding-top: 3px;
+              padding-bottom: 3px;
+              border: 0;
+              border-radius: 0;
+              margin-bottom: 0;
+              font-size: 20px;
+              letter-spacing: 0px;
+       }
+      .navbar-nav  li a:hover {
+          color: #1abc9c !important;
+      }
+
+    #dp
+    {
+    	width:150px;
+    	height:150px;
+    	border-radius: 20px;
+    }
+    .padding{
+    	margin-bottom: 20px;
+    }
+    body
+    {
+        font-family: 'Open Sans', sans-serif;
+    	background: #3a57af;
+    }
+    .btn-file {
+    position: relative;
+    overflow: hidden;
+    background-color: #16a085;
+    color:white;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
+    hr
+    {
+        height: 30px; 
+        border-style: solid; 
+        border-color: #8c8b8b; 
+        border-width: 1px 0 0 0; 
+        border-radius: 20px; 
+    }
+    hr:before { 
+      display: block; 
+      content: ""; 
+      height: 30px; 
+      margin-top: -31px; 
+      border-style: solid; 
+      border-color: #8c8b8b; 
+      border-width: 0 0 1px 0; 
+      border-radius: 20px; 
+    }
+   /* .btn-file:hover{
+        background-color: #F9690E;
+        color:#00B16A;
+    }*/
+    #color_change
+    {
+        color:white;    
+    }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".navbar" data-offset="50" >
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://atishayj.in">Hola!</a>
+			</div>
+			<div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="./home">Home</a></li>
+						<li><a href="./account">Account</a></li>
+						<li><a id="logout" href="/logout">Log out</a></li>
+					</ul>
+			</div>
+		</div>
+	</nav><br/><br/><br/>
+    <div class="container target">
+        <div class="row">
+            <div class="col-sm-10">
+                 <h1 id="color_change"><br/><br/><b><span class="name"></span></b></h1>
+             
+             <!--  <button type="button" class="btn btn-success">Book me!</button>  <button type="button" class="btn btn-info">Send me a message</button> -->
+            <br/>
+            </div>
+          <div class="col-sm-2"><a class="pull-right"><img id="dp" src="" title="profile image"></a>
+            
+            </div>
+            <form id="target" style="text-align: right;margin-top: 170px; margin-right: 45px;" action="/update_dp" enctype="multipart/form-data" method="POST">
+            &nbsp;
+            <label class="btn btn-default btn-file">
+            Change it
+            <input type="file" id="file" name="file" class="input-file" style="font-size:60%;">
+            </label>
+         </form>
+        </div>
+      <br>
+        <div class="row">
+            <div class="col-sm-3">
+                <!--left col-->
+                <ul class="list-group">
+
+                    <li class="list-group-item text-muted" contenteditable="false"><div style="color:#333;">Friends</div></li>
+                    <div class="users"></div>
+                </ul>
+               <div class="panel panel-default">
+                 <div class="panel-heading">Details
+
+                    </div>
+
+                    <div class="panel-body"><b>Name:</b> <span class="name"></span><br/><br/><b>E-Mail:</b> <span id="email"></span><br/><br/>
+                    <b>Address:</b> <span id="addr"></span>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i>
+                    &nbsp;&nbsp;<button type="button" id="edit_website" class="btn btn-info" style="padding-top: 2px;padding-bottom: 2px;">Edit</button><button id="save_website" class=" btn btn-md btn-info" style="padding-top: 2px;padding-bottom: 2px;" >Save</button>&nbsp;<button id="cancel_website" class=" btn btn-md btn-info" style="padding-top: 2px;padding-bottom: 2px;" >Cancel</button>
+                    </div>
+                    <div class="panel-body"><a href="" id="website" ><span id="Website_name"></span></a>
+                    </div>
+                </div>
+              
+                
+            </div>
+            <!--/col-3-->
+            <div class="col-sm-9" contenteditable="false">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><span class="name"></span>'s Bio &nbsp;&nbsp;<button id="edit_bio" type="button" class="btn btn-info" style="padding-top: 2px;padding-bottom: 2px;">Edit</button><button id="save_bio" class=" btn btn-md btn-info" style="padding-top: 2px;padding-bottom: 2px;" >Save</button>&nbsp;<button id="cancel_bio" class=" btn btn-md btn-info" style="padding-top: 2px;padding-bottom: 2px;" >Cancel</button></div>
+
+                    <div class="panel-body" id="bio"> <span id="Bio_name"></span>
+                   
+
+                    </div>
+                </div>
+                <div class="panel panel-default target">
+                    <div class="panel-heading" contenteditable="false">What People think about you</div>
+                    <div class="panel-body">
+                        <div class="container" style="width:100%;">
+                            <div class="row">
+                            
+                                <div class="timeline-centered">
+
+                                <article class="timeline-entry">
+
+                                    <div class="comments"></div>
+                                    <br/>
+                                    <div class="timeline-entry-inner">
+                                        <div class="timeline-icon bg-info">
+                                        </div>
+                                    </div>
+                                </article>
+
+                                </div>  
+                            </div>
+                        </div>
+                      
+                </div>
+                      
+                </div>
+            </div>
+
+
+        </div>       
+    </div>
+
+</body>
+</html>

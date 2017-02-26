@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 	<title><%= docs.Name %></title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/stylee.css'/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    
+    <script>
+
+    	$(document).ready(function(){
+    		var sess_email;
+    		$.ajax({
+    			url: '/get_sess_id',
+    			method: 'POST',
+    			success: function(data){
+    				sess_email = data;
+    				console.log(sess_email);
+    			}
+    		})
+    		var sess;
+			var documents;
+			var length_doc;
+			$.ajax({
+    			url:'getuserdata',
+    			method:'POST',
+    			success: function(data){
+    				documents = data;
+    				length_doc = data.length;
+    			}
+    		});
+			function check_likeOrUnlike()
+	    	{
+	    		$(".like_unlike").empty();
+	    		$.ajax({
+	    			url: '/likeorunlike',
+	    			method: 'POST',
+	    			success: function(data){	 
+	    			   				    				
+	    				console.log(data.length);
+	    				if(data.length==0)
+		 	    		{
+		 	    			$(".like_unlike").append("<i class=\"fa fa-thumbs-o-up\" aria-hidden=\"true\"></i>&nbsp;Like");
+		 	    		}
+		 	    		else
+		 	    		{
+		 	    			$(".like_unlike").append("<i class=\"fa fa-thumbs-o-down\" aria-hidden=\"true\"></i>&nbsp;Unlike");
+		 	    		}
+			    	}
+	    		});
+
+	    	}
+    		$(".comments").empty();
+ 	    	$("#comment").click(function(){
+				var data = $("#textarea").val();
+				$.ajax({
+					url: '/comment',
+					data: {'data': data},
+					method: 'POST'
+				});
+ 	    		setTimeout(function(){
+ 	    			$("#textarea").attr("value"," ");
+					$(".comments").empty();
+					helll();
+ 					$("#textarea").val("");
+
+ 	    		},2000);
+ 	    		
+ 	    	});
+ 	    	$("#confession").click(function(){
+ 	    		var data = $("#textarea").val();
+ 	    		$.ajax({
+ 	    			url: '/confession',
+ 	    			data: {'data': data},
+ 	    			method: 'POST'	
+ 	    		});
+ 	    		setTimeout(function(){
+					$(".comments").empty();
+					helll();
+					$("#textarea").val("");
+
+ 	    		},2000);
+ 	    	});
+ 	    	helll();
+ 	    	function helll()
+ 	    	{
+ 	    		$.ajax({
+                url:'/getcom',
+                method:'POST',
+                success: function(data){
+                            console.log(data);
+                            var length = data.length;
+                            var num,User1,Img1,num1,Img2,User2;
+                            console.log(documents);
+                            console.log(data);
+                            for(var i=length-1;i>=0;i--)
+                            {  
+                                for(var k=length_doc-1;k>=0;k--)
+                                {
+                                    if(documents[k]._id == data[i].User1)
+                                    {
+                                         Img1 = documents[k].Path;
+                                         User1 = documents[k].Name;
+                                        if(sess_email==documents[k].Email)
+                                        {
+                                            num = "./account";
+                                        }
+                                        else
+                                        {
+                                            num = "openprofile/" + k;
+                                        }
+                                    }
+                                    if(documents[k]._id == data[i].User2)
+                                    {
+                                         Img2 = documents[k].Path;
+                                         User2 = documents[k].Name;
+                                         if(sess_email==documents[k].Email)
+                                        {
+                                            num1 = "./account";
+                                        }
+                                        else
+                                        {
+                                            num1 = "openprofile/" + k;
+                                        }
+                                        break;
+                                    }
+                                }
+                                if(data[i].Type=='1')
+                                {   
+                                    $(".comments").append("<div class=\"timeline-entry-inner\"><div class=\"timeline-icon bg-success\"><i class=\"entypo-feather\"></i></div><div class=\"timeline-label\"><div id=\"all_comments\"></div><h2><img src=\"./dp/default.jpg\" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\"#\">Anonymous</a>&nbsp;&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<img src=\" "+Img2+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+num1+"\">"+User2+"</a></h2><br/><p><div class=\"pad\"><span class=\"change_color\">Confession:</span>&nbsp;<span class=\"entered_comment\">"+data[i].Data+"</span><br/><br/></div></p></div></div>");
+                                }
+                                else
+                                {
+                                     $(".comments").append("<div class=\"timeline-entry-inner\"><div class=\"timeline-icon bg-success\"><i class=\"entypo-feather\"></i></div><div class=\"timeline-label\"><div id=\"all_comments\"></div><h2>&nbsp;<img src=\" "+Img1+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+ num +"\">"+ User1 +"</a>&nbsp;&nbsp;<i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i>&nbsp;&nbsp;<img src=\" "+Img2+" \" style=\"width:20px;height:20px;border-radius:200px;\">&nbsp;<a href=\""+ num1 +"\">"+User2+"</a></h2><br/><p><div class=\"pad\"><span class=\"change_color\">Comment:</span>&nbsp;<span class=\"entered_comment\">"+data[i].Data+"</span><br/><br/></div></p></div></div>");
+                                }
+                            };
+                    }
+            	});
+	 	    	
+ 	    	};
+ 	    	$("#likes_number").click(function(){
+ 	    		$(".here").empty();
+	 	    	$.ajax({
+	 	    		url: '/get_dp_like_name',
+	 	    		method:'POST',
+	 	    		success: function(data){
+	 	    			var leni = data.length;
+	 	    			for(var z=0;z<leni;z++)
+	 	    			{
+	 	    				$.ajax({
+	 	    					url: '/hey_jude',
+	 	    					data: {'data': data[z].User1},
+	 	    					method: 'POST',
+	 	    					success: function(data1)
+	 	    					{
+	 	    						Img = data1[0].Path;
+	 	    						$(".here").append("<img src=\""+ Img +"\"style=\"width:40px;height:40px;border-radius:200px;\">&nbsp;"+data1[0].Name+"<br/><br/>");
+	 	    					}
+	 	    				});
+	 	    			};
+	 	    		}
+	 	    	});
+ 	    	});
+ 	    	$.ajax({
+ 	    		url: '/totall',
+ 	    		method:'POST',
+ 	    		success: function(data){
+ 	    			var likes_number = data.length;
+ 	    			if(likes_number == 1)
+ 	    			{
+ 	    				$("#likes_number").html("<a data-toggle=\"modal\" data-target=\"#Likes_modal\" href=\"#\">" + likes_number + " Like</a> ");
+ 			   		}
+ 			   		else
+ 			   		{
+ 			   			$("#likes_number").html("<a data-toggle=\"modal\" data-target=\"#Likes_modal\" href=\"#\">" + likes_number + " Likes</a> ");
+ 			   		}
+ 	    		}
+ 	    	});
+ 	    	 check_likeOrUnlike();
+
+ 	    	$(".like_unlike").click(function(){
+ 	    		setTimeout(function(){
+ 	    			check_likeOrUnlike();
+ 	    		},1000);
+ 	    	});
+
+ 	    	function reset_likes()
+ 	    	{
+ 	    		$.ajax({
+ 	    		url: '/totall',
+ 	    		method:'POST',
+ 	    		success: function(data){
+ 	    			setTimeout(function(){
+ 	    			
+ 	    			var likes_number = data.length;
+ 	    			
+ 	    			if(likes_number == 1)
+ 	    			{
+ 	    				$("#likes_number").html("<a data-toggle=\"modal\" data-target=\"#Likes_modal\" href=\"#\">" + likes_number + " Like</a> ");
+ 			   		}
+ 			   		else
+ 			   		{
+ 			   			$("#likes_number").html("<a data-toggle=\"modal\" data-target=\"#Likes_modal\" href=\"#\">" + likes_number + " Likes</a> ");
+ 			   		}
+ 			   		},1000);
+ 	    		}
+ 	    	});
+ 	    	};
+ 	    	// get open_id which in this case is sess
+ 	    	$.ajax({
+    			url:'get_open_id',
+    			method: 'POST',
+    			success:function(open_id){
+    				sess = open_id;
+    			}
+    		});
+
+    		$("#button_like").click(function(){
+    			$.ajax({	
+    				url: '/check_like',
+    				method: 'POST'
+    			});
+    			setTimeout(function(){
+    			reset_likes();
+    			},1000);
+    		});
+    		$.ajax({
+    			url: '/getusers',
+    			method: 'POST',
+    			success: function(data){
+    				var len = data.length;
+    				if(len==1)
+    				{
+    					$(".users1").text("No Friends to display");
+    				}
+    				for(var i=0;i<len;i++)
+    				{
+    					if(data[i].Email != sess)
+    					{
+                            // 
+    						$(".users1").append("<li class=\"list-group-item text-right\"><div class=\"padding\"><span class=\"pull-left\"><img src=\" "+data[i].Path+" \" style=\"width:40px;height:40px;border-radius:200px;\">&nbsp;<a href=\" openprofile/"+ i +"\">"+ data[i].Name +"</a></span></div><br/></li>");
+    					}
+    				}
+    			}
+    		});
+     	});
+    </script>
+    <style>
+    #dp
+    {
+    	border-radius: 20px;
+    }
+    body{
+    	background: #3a57af;
+    	font-family: 'Open Sans', sans-serif;
+    }
+/*    #likes_number
+    {
+  		border: 1px dotted #96281B;
+  		padding: 0px 0px 0px 10px;
+  		background: #E87E04;
+  		border-radius: 10px;
+    }
+
+*/   
+	 .entered_comment
+        {
+
+            background-color: #ECF0F1;
+            font-size:20px;
+            padding:10px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #F39C12;
+        }
+        .change_color
+        {
+            font-weight: bold;
+        }
+      .navbar {
+	      padding-top: 3px;
+	      padding-bottom: 3px;
+	      border: 0;
+	      border-radius: 0;
+	      margin-bottom: 0;
+	      font-size: 20px;
+	      letter-spacing: 0px;
+	  };
+      }
+      .navbar-nav  li a:hover {
+          color: #1abc9c !important;
+      }
+
+    #dp
+    {
+    	width:150px;
+    	height:150px;
+    	border-radius: 20px;
+    }
+    .padding{
+    	margin-bottom: 20px;
+    }
+    body
+    {
+        font-family: 'Open Sans', sans-serif;
+    	background: #3a57af;
+    }
+    
+
+   
+	#likes_number a{
+    	color: #D35400;
+    }
+    #likes_number a:hover{
+    	color:black;
+    }
+    #textarea
+    {
+    	padding:10px 0px 0px 10px;
+    	border-radius: 20px;
+    }
+    hr
+    {
+        height: 30px; 
+        border-style: solid; 
+        border-color: #8c8b8b; 
+        border-width: 1px 0 0 0; 
+        border-radius: 20px; 
+    }
+    hr:before { 
+      display: block; 
+      content: ""; 
+      height: 30px; 
+      margin-top: -31px; 
+      border-style: solid; 
+      border-color: #8c8b8b; 
+      border-width: 0 0 1px 0; 
+      border-radius: 20px; 
+    }
+    #color_change
+    {
+    	color:white;  	
+    }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".navbar" data-offset="50" >
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://atishayj.in">Hola!</a>
+			</div>
+			<div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="./home">Home</a></li>
+						<li><a href="./account">Account</a></li>
+						<li><a id="logout" href="/logout">Log out</a></li>
+					</ul>
+				</div>
+		</div>
+	</nav><br/><br/><br/>
+	
+		</div>
+		<div id="Likes_modal" class="modal fade" role="dialog">
+		  <div class="modal-dialog modal-md">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title"></h4>
+		      </div>
+		      <div class="modal-body">
+		        <div class="here"></div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	<br/>
+
+	<div class="container target">
+        <div class="row">
+            <div class="col-sm-10">
+                 <h1 id="color_change"><br/><br/><b><%= docs.Name %></b></h1>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+             <!--  <button type="button" class="btn btn-success">Book me!</button>  <button type="button" class="btn btn-info">Send me a message</button> -->
+            <br/>
+            </div>
+          <div class="col-sm-2"><a class="pull-right"><img id="dp" src=".<%= docs.Path %>" title="profile image"></a><br/><br/><br/><br/><br/>
+
+          </div>
+        </div>
+      <br>
+        <div class="row">
+            <div class="col-sm-3">
+                <!--left col-->
+                <ul class="list-group">
+
+                    <li class="list-group-item text-muted" contenteditable="false"><div style="color:#333;">Friends</div></li>
+                    <div class="users1"></div>
+                </ul>
+               <div class="panel panel-default">
+                 <div class="panel-heading">Details
+
+                    </div>
+
+                    <div class="panel-body"><b>Name:</b> <%= docs.Name %><br/><br/><b>E-Mail:</b> <%= docs.Email %><br/><br/>
+                    <b>Address:</b> <%= docs.Address %>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i>
+                    
+                    </div>
+                    <div class="panel-body"><a href="http://www.<%= docs.Website%>" id="website" ><%= docs.Website%></a>
+
+                    </div>
+                </div>
+              
+                
+            </div>
+            <!--/col-3-->
+            <div class="col-sm-9" contenteditable="false">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><%= docs.Name %>'s Bio</div>
+
+                    <div class="panel-body" id="bio"><%= docs.Bio %>
+                   
+
+                    </div>
+                </div>
+                <div class="panel panel-default target">
+                    <div class="panel-heading" contenteditable="false"><%= docs.Name%>'s Profile Likes</div>
+                    <div class="panel-body"><br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    		      &nbsp;&nbsp;&nbsp;<span id="likes_number" style="clear:both;"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		        	  <button class="btn btn-md btn-primary like_button" id="button_like"><span class="like_unlike"></span></button><br/><br/><br/>
+                     </div>
+                </div>
+                <div class="panel panel-default target">
+                    <div class="panel-heading" contenteditable="false">Leave a Comment for your friend</div>
+                    <div class="panel-body">
+                        <div class="container">
+							<textarea id="textarea" placeholder=" What's Up?" rows="3" cols="45" style="resize:none; width: 600px;"></textarea><br/>&nbsp;
+							<button class="btn btn-md btn-info" id="confession">Confession</button>
+							<button class="btn btn-md btn-info" id="comment">Comment</button>
+						</div><br/>
+                     </div>
+                </div>
+                
+            </div>
+                      
+                </div>
+                 <div class="panel panel-default target">
+                    <div class="panel-heading" contenteditable="false">What People think about <%= docs.Name%></div>
+                    <div class="panel-body">
+                        <div class="container" style="width:100%;">
+                            <div class="row">
+                            
+                                <div class="timeline-centered">
+
+                                <article class="timeline-entry">
+
+                                    <div class="comments"></div>
+                                    <br/>
+                                    <div class="timeline-entry-inner">
+                                        <div class="timeline-icon bg-info">
+                                        </div>
+                                    </div>
+                                </article>
+
+                                </div>  
+                            </div>
+                        </div>
+                      
+                </div>
+                      
+                </div>
+            </div>
+
+
+        </div>       
+    </div>
+  </body>
+</html>

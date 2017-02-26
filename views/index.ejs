@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 	<title>Register</title>
+ 	<meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <style>
+ 	@import url(http://fonts.googleapis.com/css?family=Titan+One);
+	@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+	@import url(http://meyerweb.com/eric/tools/css/reset/reset.css);
+
+    body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, 
+pre, form, fieldset, input, textarea, p, blockquote, th, td { 
+  padding:0;
+  margin:0;}
+
+
+
+fieldset, img {border:0}
+
+ol, ul, li {list-style:none}
+
+:focus {outline:none}
+
+body,
+input,
+textarea,
+select {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 20px;
+  color: #4c4c4c;
+}
+
+p {
+  font-size: 12px;
+  width: 150px;
+  display: inline-block;
+  margin-left: 18px;
+}
+h1 {
+  font-size: 32px;
+  font-weight: 300;
+  color: #4c4c4c;
+  text-align: center;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+html{
+      background-color: white;
+}
+body{
+      background-color: white;
+      font-family: 'Open Sans', sans-serif;
+}
+
+.testbox {
+  margin: 20px auto;
+  width: 500px; 
+  height: 464px; 
+  -webkit-border-radius: 8px/7px; 
+  -moz-border-radius: 8px/7px; 
+  border-radius: 8px/7px; 
+  background-color: #ebebeb; 
+  -webkit-box-shadow: 1px 2px 5px rgba(0,0,0,.31); 
+  -moz-box-shadow: 1px 2px 5px rgba(0,0,0,.31); 
+  box-shadow: 1px 2px 5px rgba(0,0,0,.31); 
+  border: solid 1px #cbc9c9;
+}
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+form{
+  margin: 0 30px;
+}
+
+
+hr{
+  color: #a9a9a9;
+  opacity: 0.3;
+}
+
+input[type=text],input[type=password],input[type=number]{
+  width: 350px; 
+  height: 39px; 
+  -webkit-border-radius: 0px 4px 4px 0px/5px 5px 4px 4px; 
+  -moz-border-radius: 0px 4px 4px 0px/0px 0px 4px 4px; 
+  border-radius: 0px 4px 4px 0px/5px 5px 4px 4px; 
+  background-color: #fff; 
+  -webkit-box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
+  -moz-box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
+  box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
+  border: solid 1px #cbc9c9;
+  margin-left: -5px;
+  margin-top: 13px; 
+  padding-left: 10px;
+}
+
+input[type=password]{
+  margin-top:-5px;
+  margin-bottom: 25px;
+}
+
+#icon {
+  display: inline-block;
+  width: 35px;
+  background-color: #3a57af;
+  padding: 8px 0px 8px 9px;
+  margin-left: 15px;
+  -webkit-border-radius: 4px 0px 0px 4px; 
+  -moz-border-radius: 4px 0px 0px 4px; 
+  border-radius: 4px 0px 0px 4px;
+  color: white;
+  -webkit-box-shadow: 1px 2px 5px rgba(0,0,0,.09);
+  -moz-box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
+  box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
+  border: solid 0px #cbc9c9;
+}
+
+.accounttype{
+  margin-left: 8px;
+  margin-top: 20px;
+}
+
+#final {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  padding: 6px 25px 0px 20px;
+  margin: 10px 8px 20px 0px;
+  display: inline-block;
+  text-decoration: none;
+  width: 100px; height: 40px; 
+  -webkit-border-radius: 5px; 
+  -moz-border-radius: 5px; 
+  border-radius: 5px; 
+  background-color: #3a57af; 
+  -webkit-box-shadow: 0 3px rgba(58,87,175,.75); 
+  -moz-box-shadow: 0 3px rgba(58,87,175,.75); 
+  box-shadow: 0 3px rgba(58,87,175,.75);
+  transition: all 0.1s linear 0s; 
+  top: 0px;
+  position: relative;
+}
+
+#final:hover {
+  top: 3px;
+  background-color:#2e458b;
+  -webkit-box-shadow: none; 
+  -moz-box-shadow: none; 
+  box-shadow: none;
+  
+}
+
+</style>
+  </head>
+  <body>
+  <br/><br/>
+  	<div class="container-fluid">
+  	<div class="row">
+  		<div class="col-sm-10">
+  		</div>
+  		<div class="col-sm-2">
+  		<a href="#" data-toggle="modal" data-target="#myModal">Sign In</a>&nbsp;
+  		<a href="#">Need Help?</a>
+  		</div>
+  	</div>
+	<div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body">
+	          <form action="/login" method="POST">
+				<div class="row">
+          <div class="form-group">
+            
+  					<div class="col-sm-7">
+    						 <input type="text" id="email" name="email" class="form-control" style="width: 150%;" placeholder="Enter E-Mail Address" required/><br/>
+  					</div>
+  				</div>	
+  				<div class="form-group">
+  					<div class="col-sm-7"> 
+  					  <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" style="width: 150%;" required/>
+  					</div>
+  				
+        </div>
+				<br/>
+				<div class="form-group">
+					<div class="col-sm-8"> 
+					  <input type="submit" id="submit" class="btn btn-md btn-info" value="Log In">
+					</div>
+				</div>
+        </div>
+						
+			</form><br/>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+	</div>
+
+  	
+<br/><br/><br/>
+<div class="testbox">
+  <h1>Registration</h1>
+
+  <form action="/signup" method="POST">
+  <hr>
+  <label id="icon" for="name"><i class="fa fa-envelope" aria-hidden="true"></i></label>
+  <input type="text" id="email" name="email" placeholder="Enter E-Mail Address" required/>
+  <label id="icon" for="name"><i class="fa fa-user" aria-hidden="true"></i></label>
+  <input type="text" id="name" name="name" placeholder="Enter Name" required/>
+  <label id="icon" for="name"><i class="fa fa-address-book" aria-hidden="true"></i></label>
+  <input type="text" id="address" name="address" placeholder="Enter Address" required/>
+  <label id="icon" for="name"><i class="fa fa-phone" aria-hidden="true"></i></label>
+  <input type="number" id="number" name="number" placeholder="Enter Phone no." required/><br/><br/>
+  <label id="icon" for="name"><i class="fa fa-key" aria-hidden="true"></i></label>
+  <input type="password" id="password" name="password" placeholder="Enter Password" required/>
+  <center><input type="submit" id="final" value="Register"></center>
+  </form>
+</div>
+    
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 	<title>Register</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <style>
+    body{
+    	text-align: right;
+    	background-color: white;
+      font-family: 'Open Sans', sans-serif;
+    }
+    a{
+    	color:#337ab7;
+      font-size:20px;
+    }
+    a:hover{
+    	color:green;
+    	text-decoration: none;
+    }
+    .xyz
+    {
+    	width: 40%;
+    	border:2px solid black;
+      border-radius: 20px;
+    	margin: 0px 0px 0px 0px;
+    	padding: 20px 0px 0px 40px;
+    	text-align: center;
+    	color:black;
+    }
+    #submit
+    {
+    	 margin: 0px 0px 0px 80px;
+    }
+    </style>
+  </head>
+  <body>
+  	<br/>
+    <a href="./">Sign Up</a>&nbsp;
+    <a href="#">Need Help?</a>&nbsp;&nbsp;
+  <br/><br/><br/><br/>
+  	<div class="container">
+  	<center>
+  	<div class="xyz">
+  	<br/>
+  	<form action="/login" method="POST">
+		<div class="form-group">
+			<div class="col-sm-7">
+				<div class="rows">
+					 <input type="text" id="email" name="email" class="form-control" style="width: 350px;" placeholder="Enter E-Mail Address" required/>
+				</div>
+			</div>
+		</div>	
+		<div class="form-group">
+			<div class="col-sm-7"> <br/>
+			  <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" style="width: 350px;" required/>
+			</div>
+		</div>
+		<br/><br/><br/><br/>
+		<div class="form-group">
+			<div class="col-sm-8">
+			  <input type="submit" id="submit" class="btn btn-md btn-danger" value="Log In">
+			</div>
+		</div>
+		<br/><br/>
+		
+	</form>	
+  	</center>
+  </body>
+</html>
